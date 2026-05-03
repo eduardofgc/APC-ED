@@ -1,0 +1,30 @@
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# VSCode local history & workspace files
+.history/
+*.vsix
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Dependencies
+node_modules/
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+out/
