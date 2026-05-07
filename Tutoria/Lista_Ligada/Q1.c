@@ -1,22 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Node
-{
+typedef struct Node{
     int val;
     struct Node *prox;
     struct Node *passado;
 } Node;
 
-typedef struct Lista
-{
+typedef struct Lista{
     int size;
     Node *head;
     Node *ultimo;
 } Lista;
 
-Lista *createList()
-{
+Lista *createList(){
     Lista *novaLista = (Lista *)malloc(sizeof(Lista));
     novaLista->head = NULL;
     novaLista->ultimo = NULL;
