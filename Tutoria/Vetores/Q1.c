@@ -1,3 +1,7 @@
+//letra b já está implementada, uma implementação que criaria cópias seria uma que destruisse a imagem original
+//e criasse uma nova com tamanho estendido ou cortado.
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -145,8 +149,4 @@ void cortarDireita(Imagem* minhaImagem, int pixelsCortados){
     }
 
     minhaImagem->colunas = novasColunas;
-}
-
-int main(){
-    printf("hello world!\n");
 }
