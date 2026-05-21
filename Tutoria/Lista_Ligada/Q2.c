@@ -13,6 +13,7 @@ typedef struct Node{
 
 typedef struct Matriz{
     Node* inicio;
+
     int linhasMax;
     int colunasMax;
 } Matriz;
@@ -26,21 +27,32 @@ Matriz* criarMatriz (int minhasLinhas, int minhasColunas){
     return novaMatriz;
 }
 
-void adicionarElemento(Matriz* minhaMatriz, int meuValor){
-    Node* novo = (Node*) malloc(sizeof(Node));
-    novo->index = meuValor;
-    Node* atual = minhaMatriz->inicio;
+void adicionarElemento(Matriz* minhaMatriz, int meuValor, int minhaLinha, int minhaColuna){
+    int achou = 0;
 
-    while (atual != NULL){
-        
-        for (int i = 0; i < minhaMatriz->linhasMax; i++){
+    if (meuValor == 0) return;
 
-            for (int j = 0; j < minhaMatriz->colunasMax; j++){ //TODO
-                
+    Node* novoNode = (Node*)malloc(sizeof(Node));
+    novoNode->index = meuValor;
+    novoNode->linha = minhaLinha;
+    novoNode->coluna = minhaColuna;
+
+    if (minhaMatriz->inicio == NULL){
+        novoNode->direita = NULL;
+        novoNode->abaixo = NULL;
+
+        minhaMatriz->inicio = novoNode;
+    }
+    else{
+        Node* atual = minhaMatriz->inicio;
+
+        for (int i = 0; i < minhaMatriz->colunasMax; i++){
+            if (atual->direita == NULL){//todo
 
             }
         }
     }
+    
 }
 
 //letra b

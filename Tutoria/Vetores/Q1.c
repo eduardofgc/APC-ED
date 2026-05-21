@@ -1,6 +1,3 @@
-//letra b já está implementada, uma implementação que criaria cópias seria uma que destruisse a imagem original
-//e criasse uma nova com tamanho estendido ou cortado.
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,23 +9,23 @@ typedef struct Node{
 } Node;
 
 typedef struct Imagem{
+    Node* start;
+
     int linhas;
     int colunas;
-
-    Node* start;
 } Imagem;
 
-Imagem* criarImagem(int linhas, int colunas){
+Imagem* criarMatriz(int linhas, int colunas){
 
     if (linhas <= 0 || colunas <= 0){
-        printf("invalido\n");
-        return;
+        printf("tamanho invalido!\n");
+        return NULL;
     }
-    
-    Imagem* minhaImagem = (Imagem*) malloc(sizeof(Imagem));
 
-    minhaImagem->colunas = colunas;
+    Imagem* minhaImagem = (Imagem*)malloc(sizeof(Imagem));
+
     minhaImagem->linhas = linhas;
+    minhaImagem->colunas = colunas;
 
     Node* primeiraLinha = NULL;
     Node* linhaAnterior = NULL;
@@ -41,7 +38,6 @@ Imagem* criarImagem(int linhas, int colunas){
 
         for (int j = 0; j < colunas; j++){
             Node* novoNode = (Node*) malloc(sizeof(Node));
-
             novoNode->val = 1;
 
             novoNode->direita = NULL;
@@ -60,12 +56,13 @@ Imagem* criarImagem(int linhas, int colunas){
                 acima->abaixo = novoNode;
                 acima = acima->direita;
             }
+
         }
 
         if (i == 0){
             primeiraLinha = inicioLinha;
         }
-        
+
         linhaAnterior = inicioLinha;
     }
 
@@ -83,8 +80,7 @@ void estenderImagemDireita(Imagem* minhaImagem, int pixelsExtendidos){
 
     Node* linha = minhaImagem->start;
 
-    while (linha != NULL){
-
+    while(linha != NULL){
         Node* atual = linha;
 
         while (atual->direita != NULL){
@@ -92,9 +88,7 @@ void estenderImagemDireita(Imagem* minhaImagem, int pixelsExtendidos){
         }
 
         for (int i = 0; i < pixelsExtendidos; i++){
-
-            Node* novoNode = malloc(sizeof(Node));
-
+            Node* novoNode = (Node*)malloc(sizeof(Node));
             novoNode->val = 0;
             novoNode->direita = NULL;
             novoNode->abaixo = NULL;
@@ -106,11 +100,11 @@ void estenderImagemDireita(Imagem* minhaImagem, int pixelsExtendidos){
         linha = linha->abaixo;
     }
 
-    minhaImagem->colunas += pixelsExtendidos;
+    minhaImagem->colunas = minhaImagem->colunas + pixelsExtendidos;
 }
 
-void cortarDireita(Imagem* minhaImagem, int pixelsCortados){
-    if (pixelsCortados <= 0){
+void cortarImagemDireita(int pixelsCortados, Imagem* minhaImagem){
+    if (pixelsCortados <= 0 || pixelsCortados >= minhaImagem->colunas){
         printf("tamanho invalido!\n");
         return;
     }
@@ -121,14 +115,14 @@ void cortarDireita(Imagem* minhaImagem, int pixelsCortados){
     while (linha != NULL){
         Node* atual = linha;
 
-        for (int i = 0; i < novasColunas; i++){
+        for (int i = 0; i < novasColunas - 1; i++){
             atual = atual->direita;
         }
 
         Node* aSerApagado = atual->direita;
         atual->direita = NULL;
 
-        while(aSerApagado != NULL){
+        while (aSerApagado != NULL){
             Node* prox = aSerApagado->direita;
             free(aSerApagado);
 
@@ -139,4 +133,41 @@ void cortarDireita(Imagem* minhaImagem, int pixelsCortados){
     }
 
     minhaImagem->colunas = novasColunas;
+}
+
+void printImage(Imagem* minhaImagem){
+    if (minhaImagem == NULL){
+        printf("nao tem imagem!\n");
+        return;
+    }
+
+    Node* linha = minhaImagem->start;
+
+    while (linha != NULL){
+        Node* atual = linha;
+
+        while (atual != NULL){
+            printf("%d ", atual->val);
+            atual = atual->direita;
+        }
+
+        printf("\n");
+        linha = linha->abaixo;
+    }
+}
+
+int main(){
+    Imagem* matriz = criarMatriz(8, 8);
+
+    printImage(matriz);
+
+    estenderImagemDireita(matriz, 5);
+
+    printImage(matriz);
+
+    cortarImagemDireita(6, matriz);
+
+    printImage(matriz);
+
+    return 0;
 }
