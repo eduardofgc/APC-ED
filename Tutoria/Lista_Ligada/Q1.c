@@ -2,121 +2,200 @@
 #include <stdlib.h>
 
 typedef struct Node{
+    struct Node* prox;
     int val;
-    struct Node *prox;
-    struct Node *passado;
 } Node;
 
 typedef struct Lista{
-    int size;
-    Node *head;
-    Node *ultimo;
+    Node* head;
+    int tamanho;
 } Lista;
 
-Lista *createList(){
-    Lista *novaLista = (Lista *)malloc(sizeof(Lista));
-    novaLista->head = NULL;
-    novaLista->ultimo = NULL;
-    novaLista->size = 0;
+Lista* criaLista(){
+    Lista* minhaLista = (Lista*)malloc(sizeof(Lista));
+
+    minhaLista->head = NULL;
+    minhaLista->tamanho = 0;
+
+    return minhaLista;
+}
+
+void addNode(Lista* minhaLista, int val){
+
+    Node* novoNode = (Node*)malloc(sizeof(Node));
+    novoNode->val = val;
+    novoNode->prox = NULL;
+
+    if (minhaLista->head == NULL || val < minhaLista->head->val){
+
+        novoNode->prox = minhaLista->head;
+        minhaLista->head = novoNode;
+
+        minhaLista->tamanho++;
+        return;
+    }
+
+    Node* atual = minhaLista->head;
+
+    while (atual->prox != NULL && atual->prox->val < val){
+        atual = atual->prox;
+    }
+
+    if (atual->val == val ||
+       (atual->prox != NULL && atual->prox->val == val)){
+
+        free(novoNode);
+        return;
+    }
+
+    novoNode->prox = atual->prox;
+    atual->prox = novoNode;
+
+    minhaLista->tamanho++;
+}
+
+int existe(int val, Lista* minhaLista){
+    Node* atual = minhaLista->head;
+
+    while (atual != NULL){
+        if (atual->val == val){
+            return 1;
+        }
+
+        atual = atual->prox;
+    }
+
+    return 0;
+}
+
+Lista* uniaoOrdenada(Lista* lista1, Lista* lista2){
+
+    Lista* novaLista = criaLista();
+
+    Node* atual = lista1->head;
+
+    while(atual != NULL){
+
+        if (!existe(atual->val, novaLista)){
+            addNode(novaLista, atual->val);
+        }
+
+        atual = atual->prox;
+    }
+
+    atual = lista2->head;
+
+    while(atual != NULL){
+
+        if (!existe(atual->val, novaLista)){
+            addNode(novaLista, atual->val);
+        }
+
+        atual = atual->prox;
+    }
 
     return novaLista;
 }
 
-// letra a
-void addElem(int num, Lista *minhaLista)
-{
-    Node *novo = malloc(sizeof(Node));
-    novo->val = num;
-    novo->prox = NULL;
-    novo->passado = NULL;
+void addNodeDesordenado(Lista* lista, int val){
 
-    if (minhaLista->head == NULL)
-    {
-        minhaLista->head = novo;
-        minhaLista->ultimo = novo;
-        minhaLista->size++;
+    Node* novoNode = (Node*)malloc(sizeof(Node));
+
+    novoNode->val = val;
+    novoNode->prox = NULL;
+
+    if (lista->head == NULL){
+
+        lista->head = novoNode;
+        lista->tamanho++;
+
         return;
     }
 
-    Node *cur = minhaLista->head;
-    while (cur != NULL && cur->val < num)
-        cur = cur->prox;
+    Node* atual = lista->head;
 
-    if (cur == NULL)
-    {
-        novo->passado = minhaLista->ultimo;
-        minhaLista->ultimo->prox = novo;
-        minhaLista->ultimo = novo;
-    }
-    else if (cur == minhaLista->head)
-    {
-        novo->prox = minhaLista->head;
-        minhaLista->head->passado = novo;
-        minhaLista->head = novo;
-    }
-    else
-    {
-        novo->prox = cur;
-        novo->passado = cur->passado;
-        cur->passado->prox = novo;
-        cur->passado = novo;
+    while (atual->prox != NULL){
+        atual = atual->prox;
     }
 
-    minhaLista->size++;
+    atual->prox = novoNode;
+
+    lista->tamanho++;
 }
 
-// letra c (e b, uma vez que os elementos que adicionamos ja sao ordenados)
-Lista *uniao(Lista *a, Lista *b)
-{
-    Lista *resultado = createList();
+Lista* uniaoDesordenada(Lista* lista1, Lista* lista2){
 
-    Node *curA = a->head;
-    Node *curB = b->head;
+    Lista* novaLista = criaLista();
 
-    while (curA != NULL && curB != NULL)
-    {
-        if (curA->val < curB->val)
-        {
-            addElem(curA->val, resultado);
-            curA = curA->prox;
+    Node* atual = lista1->head;
+
+    while (atual != NULL){
+
+        if (!existe(atual->val, novaLista)){
+
+            addNodeDesordenado(novaLista, atual->val);
         }
-        else if (curB->val < curA->val)
-        {
-            addElem(curB->val, resultado);
-            curB = curB->prox;
-        }
-        else
-        {
-            addElem(curA->val, resultado);
-            curA = curA->prox;
-            curB = curB->prox;
-        }
+
+        atual = atual->prox;
     }
 
-    while (curA != NULL)
-    {
-        addElem(curA->val, resultado);
-        curA = curA->prox;
+    atual = lista2->head;
+
+    while (atual != NULL){
+
+        if (!existe(atual->val, novaLista)){
+
+            addNodeDesordenado(novaLista, atual->val);
+        }
+
+        atual = atual->prox;
     }
 
-    while (curB != NULL)
-    {
-        addElem(curB->val, resultado);
-        curB = curB->prox;
-    }
-
-    return resultado;
+    return novaLista;
 }
 
-void printLista(Lista *minhaLista)
-{
-    Node *referenceNode = minhaLista->head;
+Lista* uniaoOrdenada(Lista* lista1, Lista* lista2){
 
-    while (referenceNode != NULL)
-    {
-        printf("%d ", referenceNode->val);
-        referenceNode = referenceNode->prox;
+    Lista* novaLista = criaLista();
+
+    Node* atual = lista1->head;
+    while(atual != NULL){
+
+        if (!existe(atual->val, novaLista)){
+            addNode(novaLista, atual->val);
+        }
+
+        atual = atual->prox;
     }
 
-    printf("\n");
+    atual = lista2->head;
+
+    while(atual != NULL){
+
+        if (!existe(atual->val, novaLista)){
+            addNode(novaLista, atual->val);
+        }
+
+        atual = atual->prox;
+    }
+
+    return novaLista;
+}
+
+
+//extra
+Lista* intersecao(Lista* lista1, Lista* lista2){
+    Lista* novaLista = criaLista();
+
+    Node* atual = lista1->head;
+
+    while(atual != NULL){
+        if (existe(atual->val, lista2)){
+            addNode(novaLista, atual->val);
+        }
+
+        atual = atual->prox;
+    }
+
+    return novaLista;
 }
