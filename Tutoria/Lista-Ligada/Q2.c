@@ -1,79 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//letra a
 typedef struct Node{
     struct Node* direita;
     struct Node* abaixo;
 
-    int index;
-    int linha;
-    int coluna;
+    int val;
+    int x;
+    int y;
 } Node;
 
 typedef struct Matriz{
     Node* inicio;
 
-    int linhasMax;
-    int colunasMax;
+    int linhas;
+    int colunas;
 } Matriz;
 
-Matriz* criarMatriz (int minhasLinhas, int minhasColunas){
+Matriz* criaMatriz(int linhas, int colunas){
     Matriz* novaMatriz = (Matriz*) malloc(sizeof(Matriz));
-    novaMatriz->linhasMax = minhasLinhas;
-    novaMatriz->colunasMax = minhasColunas;
     novaMatriz->inicio = NULL;
+    novaMatriz->linhas = linhas;
+    novaMatriz->colunas = colunas;
 
     return novaMatriz;
 }
 
-void adicionarElemento(Matriz* minhaMatriz, int meuValor, int minhaLinha, int minhaColuna){
-    int achou = 0;
-
-    if (meuValor == 0) return;
-
-    Node* novoNode = (Node*)malloc(sizeof(Node));
-    novoNode->index = meuValor;
-    novoNode->linha = minhaLinha;
-    novoNode->coluna = minhaColuna;
+Node* acessarNode(int x, int y, Matriz* minhaMatriz){
 
     if (minhaMatriz->inicio == NULL){
-        novoNode->direita = NULL;
-        novoNode->abaixo = NULL;
-
-        minhaMatriz->inicio = novoNode;
-    }
-    else{
-        Node* atual = minhaMatriz->inicio;
-
-        for (int i = 0; i < minhaMatriz->colunasMax; i++){
-            if (atual->direita == NULL){//todo
-
-            }
-        }
-    }
-    
-}
-
-//letra b
-Node* acessarElemento(Matriz* minhaMatriz, int minha_linha, int minha_coluna) {
-
-    Node* dummy_linha = minhaMatriz->inicio;
-
-    for (int i = 0; i < minha_linha; i++) {
-        dummy_linha = dummy_linha->abaixo;
+        printf("sem matriz!\n");
+        return NULL;
     }
 
-    Node* atual = dummy_linha->direita;
+    Node* linha = minhaMatriz->inicio;
 
-    while (atual != dummy_linha) {
+    for (int i = 0; i < y; i++){
+        linha = linha->abaixo;
+    }
 
-        if (atual->coluna == minha_coluna) {
+    Node* atual = linha->direita;
+
+    while (atual != linha){
+
+        if (atual->x == x){
             return atual;
         }
 
-        if (atual->coluna > minha_coluna) {
-            return NULL; 
+        if (atual->y > y){
+            return NULL;
         }
 
         atual = atual->direita;
