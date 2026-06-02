@@ -58,7 +58,6 @@ int acharMaior(Pilha* minhaPilha){
     Node* atual = minhaPilha->inicio;
     int maior = minhaPilha->inicio->val;
 
-
     while (atual != NULL){
         if (atual->val > maior) maior = atual->val;
 
