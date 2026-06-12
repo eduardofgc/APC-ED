@@ -50,12 +50,13 @@ Registro popRegistro(Pilha* minhaPilha){
 
 void hanoi(int n, char orig, char dest, char aux){
     Pilha* pilha = criaPilha();
-    Registro registro;
 
+    Registro registro;
     registro.n = n;
     registro.orig = orig;
     registro.dest = dest;
     registro.aux = aux;
+    registro.retorno = 0;
 
     push(pilha, registro);
 
@@ -66,7 +67,8 @@ void hanoi(int n, char orig, char dest, char aux){
             continue;
         }
 
-        if (atual.retorno != 0){
+        if (atual.retorno == 0){
+
             Registro voltaRegistro;
 
             voltaRegistro.n = atual.n;
@@ -79,19 +81,23 @@ void hanoi(int n, char orig, char dest, char aux){
 
             Registro segRegistro;
 
-            segRegistro.n = atual.n-1;
+            segRegistro.n = atual.n - 1;
             segRegistro.orig = atual.orig;
-            segRegistro.dest = atual.dest;
-            segRegistro.aux = atual.aux;
+            segRegistro.dest = atual.aux;
+            segRegistro.aux = atual.dest;
             segRegistro.retorno = 0;
 
             push(pilha, segRegistro);
         }
+
         else if (atual.retorno == 1){
-            printf("move de %c para %c\n", atual.orig, atual.dest);
+
+            printf("move de %c para %c\n",
+                   atual.orig,
+                   atual.dest);
 
             Registro ultimaVolta;
-            
+
             ultimaVolta.n = atual.n;
             ultimaVolta.orig = atual.orig;
             ultimaVolta.dest = atual.dest;
@@ -102,13 +108,17 @@ void hanoi(int n, char orig, char dest, char aux){
 
             Registro fallback;
 
-            fallback.n = atual.n-1;
-            fallback.orig = atual.orig;
+            fallback.n = atual.n - 1;
+            fallback.orig = atual.aux;
             fallback.dest = atual.dest;
             fallback.aux = atual.orig;
             fallback.retorno = 0;
 
             push(pilha, fallback);
+        }
+
+        else if (atual.retorno == 2){
+            continue;
         }
     }
 }
