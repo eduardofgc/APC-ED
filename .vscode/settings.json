@@ -52,5 +52,6 @@
         "variant": "cpp",
         "cstring": "cpp"
     },
-    "editor.fontFamily": "JetBrains Mono,  'Courier New', monospace"
+    "editor.fontFamily": "JetBrains Mono,  'Courier New', monospace",
+    "C_Cpp.errorSquiggles": "enabled"
 }
