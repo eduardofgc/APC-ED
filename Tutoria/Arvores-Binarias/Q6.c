@@ -17,6 +17,12 @@ Node* criaNode(char letra){
     return novoNode;
 }
 
+//opt struct da tree nao usada, resolvi passar o proprio root como parametro
+typedef struct Tree{
+    Node* root;
+    int size;
+} Tree;
+
 Node* recuperaArvore(char* string, int* array){
     if (string[*array] == '\0'){
         return NULL;
